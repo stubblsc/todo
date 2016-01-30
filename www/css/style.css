@@ -1,0 +1,34 @@
+/* Empty. Add your own CSS if you like */
+.task-item{
+  width: 50%;
+  position: relative;
+  line-height: 50px;
+}
+
+.task-buttons{
+  width: 50%;
+  position: relative;
+  line-height: 50px;
+}
+
+.outer-task{
+  width: 100%;
+  display: flex;
+}
+
+.project-item{
+  width: 50%;
+  position: relative;
+  line-height: 50px;
+}
+
+.project-buttons{
+  width: 50%;
+  position: relative;
+  line-height: 50px;
+}
+
+.outer-project{
+  width: 100%;
+  display: flex;
+}
