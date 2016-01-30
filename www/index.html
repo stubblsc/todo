@@ -15,6 +15,7 @@
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="js/app.js"></script>
@@ -104,6 +105,12 @@
           <label class="item item-input">
             <input type="text" placeholder="What do you need to do?" ng-model="task.title">
           </label>
+          <label class="item item-input">
+            <input type="text" placeholder="Reminder hour" ng-model="task.reminderHour">
+          </label>
+          <label class="item item-input">
+            <input type="text" placeholder="Reminder minute" ng-model="task.reminderMinute">
+          </label>
         </div>
         <div class="padding">
           <button type="submit" class="button button-block button-positive">Create Task</button>
@@ -118,7 +125,7 @@
     <!-- Modal header bar -->
     <ion-header-bar class="bar-secondary">
       <h1 class="title">Edit Task</h1>
-      <button class="button button-clear button-positive" ng-click="closeNewTask()">Cancel</button>
+      <button class="button button-clear button-positive" ng-click="closeEditTask()">Cancel</button>
     </ion-header-bar>
 
     <!-- Modal content area -->
@@ -128,7 +135,14 @@
           <label class="item item-input">
             <input type="text" placeholder="What do you need to do?" ng-model="task.title">
           </label>
+          <label class="item item-input">
+            <input type="text" placeholder="Reminder hour" ng-model="task.reminderHour">
+          </label>
+          <label class="item item-input">
+            <input type="text" placeholder="Reminder minute" ng-model="task.reminderMinute">
+          </label>
         </div>
+      </div>
         <div class="padding">
           <button type="submit" class="button button-block button-positive">Update Task</button>
           <button class="button button-block button-assertive" ng-click="deleteTask($index, task)">Delete Task</button>

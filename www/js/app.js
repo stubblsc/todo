@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('todo', ['ionic'])
+angular.module('todo', ["ionic", "ngCordova"])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -20,6 +20,19 @@ angular.module('todo', ['ionic'])
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+    // if(device.platform === "iOS") {
+    window.plugin.notification.local.promptForPermission();
+    // }
+    // window.plugin.notification.local.onadd = function (id, state, json) {
+    //   var notification = {
+    //     id: id,
+    //     state: state,
+    //     json: json
+    //   };
+    //   $timeout(function() {
+    //     $rootScope.$broadcast("$cordovaLocalNotification:added", notification);
+    //   });
+    // };
   });
 })
 
@@ -56,7 +69,7 @@ angular.module('todo', ['ionic'])
   }
 })
 
-.controller('TodoCtrl', function($scope, $ionicModal, Projects, $ionicSideMenuDelegate, $timeout, $ionicPopup) {
+.controller('TodoCtrl', function($scope, $ionicModal, Projects, $ionicSideMenuDelegate, $timeout, $ionicPopup, $ionicPlatform, $cordovaLocalNotification) {
   // creates a project
   var createProject = function(projectTitle) {
     var newProject = Projects.newProject(projectTitle);
@@ -145,14 +158,29 @@ angular.module('todo', ['ionic'])
       return;
     }
     $scope.activeProject.tasks.push({
-      title: task.title
+      title: task.title,
+      reminderMinute: task.reminderMinute,
+      reminderHour: task.reminderHour
     });
     $scope.taskModal.hide();
 
     // Inefficient, but save all the projects
     Projects.save($scope.projects);
 
-    task.title = "";
+    var alarmTime = new Date();
+    alarmTime.setMinutes(minute);
+    alarmTime.setHours(hour);
+    cordova.plugins.notification.local.schedule({
+      id: 1,
+      title: task.title,
+      message: task.title + " is due",
+      at: alarmTime,
+      sound: null
+    });
+
+    task.title = ""
+    task.reminderMinute = ""
+    task.reminderHour = ""
   };
 
   // Called when the form is submitted
@@ -228,7 +256,7 @@ angular.module('todo', ['ionic'])
     $scope.taskModal.hide();
   }
 
-  $scope.closeNewTask = function() {
+  $scope.closeEditTask = function() {
     $scope.editTaskModal.hide();
   }
 
@@ -252,4 +280,7 @@ angular.module('todo', ['ionic'])
     }
   });
 
+  $scope.$on("$cordovaLocalNotification:added", function(id, state, json) {
+    alert("Added a notification");
+  });
 });
