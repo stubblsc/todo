@@ -6,33 +6,28 @@
 angular.module('todo', ["ionic", "ngCordova"])
 
 .run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+  document.addEventListener("deviceready", function(){
+    $ionicPlatform.ready(function() {
+      if(window.cordova && window.cordova.plugins.Keyboard) {
+        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+        // for form inputs)
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 
-      // Don't remove this line unless you know what you are doing. It stops the viewport
-      // from snapping when text inputs are focused. Ionic handles this internally for
-      // a much nicer keyboard experience.
-      cordova.plugins.Keyboard.disableScroll(true);
-    }
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
-    // if(device.platform === "iOS") {
-    window.plugin.notification.local.promptForPermission();
-    // }
-    // window.plugin.notification.local.onadd = function (id, state, json) {
-    //   var notification = {
-    //     id: id,
-    //     state: state,
-    //     json: json
-    //   };
-    //   $timeout(function() {
-    //     $rootScope.$broadcast("$cordovaLocalNotification:added", notification);
-    //   });
-    // };
+        // Don't remove this line unless you know what you are doing. It stops the viewport
+        // from snapping when text inputs are focused. Ionic handles this internally for
+        // a much nicer keyboard experience.
+        cordova.plugins.Keyboard.disableScroll(true);
+      }
+      if(window.StatusBar) {
+        StatusBar.styleDefault();
+      }
+      if(device.platform === "iOS") {
+        window.plugin.notification.local.promptForPermission();
+      }
+      $scope.$on("$cordovaLocalNotification:added", function(id, state, json) {
+        alert("Added a notification");
+      });
+    });
   });
 })
 
@@ -159,8 +154,8 @@ angular.module('todo', ["ionic", "ngCordova"])
     }
     $scope.activeProject.tasks.push({
       title: task.title,
-      reminderMinute: task.reminderMinute,
-      reminderHour: task.reminderHour
+      reminderMinute: parseInt(task.reminderMinute),
+      reminderHour: parseInt(task.reminderHour)
     });
     $scope.taskModal.hide();
 
@@ -168,9 +163,9 @@ angular.module('todo', ["ionic", "ngCordova"])
     Projects.save($scope.projects);
 
     var alarmTime = new Date();
-    alarmTime.setMinutes(minute);
-    alarmTime.setHours(hour);
-    cordova.plugins.notification.local.schedule({
+    alarmTime.setMinutes(task.reminderMinute);
+    alarmTime.setHours(task.reminderHour);
+    $cordovaLocalNotification.add({
       id: 1,
       title: task.title,
       message: task.title + " is due",
@@ -247,7 +242,7 @@ angular.module('todo', ["ionic", "ngCordova"])
 
   // Open our new task modal
   $scope.editTask = function(i, task) {
-    $scope.task = {title: task.title, isDone: task.isDone};
+    $scope.task = {title: task.title, reminderMinute: task.reminderMinute, reminderHour: task.reminderHour};
     $scope.taskIndex = i;
     $scope.editTaskModal.show();
   };
@@ -280,7 +275,4 @@ angular.module('todo', ["ionic", "ngCordova"])
     }
   });
 
-  $scope.$on("$cordovaLocalNotification:added", function(id, state, json) {
-    alert("Added a notification");
-  });
 });

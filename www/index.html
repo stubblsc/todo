@@ -18,13 +18,12 @@
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
-    <script src="js/app.js"></script>
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
   </head>
-  <body ng-app="todo" ng-controller="TodoCtrl">
+  <body ng-app="todo" ng-controller="TodoCtrl" class="platform-ios platform-android">
     <ion-side-menus>
       <!-- Center content -->
       <ion-side-menu-content>
@@ -142,7 +141,6 @@
             <input type="text" placeholder="Reminder minute" ng-model="task.reminderMinute">
           </label>
         </div>
-      </div>
         <div class="padding">
           <button type="submit" class="button button-block button-positive">Update Task</button>
           <button class="button button-block button-assertive" ng-click="deleteTask($index, task)">Delete Task</button>
